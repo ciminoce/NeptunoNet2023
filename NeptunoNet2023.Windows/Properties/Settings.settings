@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NeptunoNet2023.Windows.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MiConexion" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Server=.; Database=NeptunoFer2023; Trusted_Connection=true;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
