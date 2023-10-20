@@ -22,14 +22,5 @@ namespace NeptunoNet2023.Windows.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Server=.; Database=NeptunoFer2023; Trusted_Connection=true;")]
-        public string MiConexion {
-            get {
-                return ((string)(this["MiConexion"]));
-            }
-        }
     }
 }
