@@ -20,16 +20,7 @@ namespace NeptunoNet2023.Windows
 
         private void frmPaises_Load(object sender, EventArgs e)
         {
-            try
-            {
-                listaPaises = _serviciosPaises.GetAll();
-                MostrarDatosEnGrilla();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            RecargarGrilla();
         }
 
         private void MostrarDatosEnGrilla()
@@ -72,24 +63,36 @@ namespace NeptunoNet2023.Windows
             try
             {
                 Pais pais = frm.GetPais();
-                _serviciosPaises.Guardar(pais);
-                var r = ConstruirFila();
-                SetearFila(r, pais);
-                AgregarFila(r);
-                MessageBox.Show("Registro Agregado Satisfactoriamente!!!",
-                    "Mensaje",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
 
-            }
+                if (!_serviciosPaises.Existe(pais))
+                {
+                    _serviciosPaises.Guardar(pais);
+                    var r = ConstruirFila();
+                    SetearFila(r, pais);
+                    AgregarFila(r);
+                    MessageBox.Show("Registro Agregado Satisfactoriamente!!!",
+                        "Mensaje",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                }
+                else
+                {
+					MessageBox.Show("Registro Duplicado",
+	                    "Error",
+	                    MessageBoxButtons.OK,
+	                    MessageBoxIcon.Error);
+
+				}
+			}
             catch (Exception ex)
             {
-                Exception exc = ex;
-                if (ex.Message != null && ex.Message.Contains("IX"))
-                {
-                    exc = new Exception("Registro duplicado");
-                }
-                MessageBox.Show(exc.Message,
+                //Exception exc = ex;
+                //if (ex.Message != null && ex.Message.Contains("IX"))
+                //{
+                //    exc = new Exception("Registro duplicado");
+                //}
+                MessageBox.Show(ex.Message,
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
@@ -116,14 +119,29 @@ namespace NeptunoNet2023.Windows
             }
             try
             {
-                _serviciosPaises.Borrar(pais.PaisId);
-                QuitarFila(r);
-                MessageBox.Show("Registro Borrado Satisfactoriamente!!!",
-                    "Mensaje",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                //OJO Falta ver que no esté relacionado antes
 
-            }
+                int registrosAfectados=_serviciosPaises.Borrar(pais);
+                if (registrosAfectados>0)
+                {
+                    QuitarFila(r);
+                    MessageBox.Show("Registro Borrado Satisfactoriamente!!!",
+                        "Mensaje",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                }
+                else
+                {
+					MessageBox.Show("Registro modificado o borrado por otro usuario!!!",
+                    "Advertencia",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+					RecargarGrilla();
+
+				}
+
+			}
             catch (Exception ex)
             {
 
@@ -163,14 +181,29 @@ namespace NeptunoNet2023.Windows
             try
             {
                 pais = frm.GetPais();
-                _serviciosPaises.Guardar(pais);
-                SetearFila(r,pais);
-                MessageBox.Show("Registro Editado Satisfactoriamente!!!",
-                    "Mensaje",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                //Falta ver si el país existe!!!!
 
-            }
+                int registrosAfectados=_serviciosPaises.Guardar(pais);
+
+                if (registrosAfectados>0)
+                {
+                    SetearFila(r, pais);
+                    MessageBox.Show("Registro Editado Satisfactoriamente!!!",
+                        "Mensaje",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                }
+                else
+                {
+					MessageBox.Show("Registro modificado o borrado por otro usuario!!!",
+	                "Advertencia",
+	                MessageBoxButtons.OK,
+	                MessageBoxIcon.Warning);
+                    RecargarGrilla();
+
+				}
+			}
             catch (Exception ex)
             {
                 Exception exc = ex;
@@ -185,5 +218,20 @@ namespace NeptunoNet2023.Windows
 
             }
         }
-    }
+
+		private void RecargarGrilla()
+		{
+			try
+			{
+				listaPaises = _serviciosPaises.GetAll();
+				MostrarDatosEnGrilla();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+
+		}
+	}
 }

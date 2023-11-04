@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NeptunoNet2023.Entidades\NeptunoNet2023.Entidades.csproj" />
+    <ProjectReference Include="..\NeptunoNet2023.Comun\NeptunoNet2023.Comun.csproj" />
   </ItemGroup>
 
 </Project>

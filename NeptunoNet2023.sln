@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeptunoNet2023.Entidades", "NeptunoNet2023.Entidades\NeptunoNet2023.Entidades.csproj", "{999D0C50-69FA-4E51-B084-1A36073908B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeptunoNet2023.Entidades", "NeptunoNet2023.Entidades\NeptunoNet2023.Entidades.csproj", "{999D0C50-69FA-4E51-B084-1A36073908B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeptunoNet2023.Comun", "NeptunoNet2023.Comun\NeptunoNet2023.Comun.csproj", "{C8729F71-DE1C-4D75-A9A5-8AF0A55EDED9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeptunoNet2023.Comun", "NeptunoNet2023.Comun\NeptunoNet2023.Comun.csproj", "{C8729F71-DE1C-4D75-A9A5-8AF0A55EDED9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeptunoNet2023.DatosSql", "NeptunoNet2023.DatosSql\NeptunoNet2023.DatosSql.csproj", "{1EC414E2-D280-4110-8B3C-4EC1E7FAC1B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeptunoNet2023.DatosSql", "NeptunoNet2023.DatosSql\NeptunoNet2023.DatosSql.csproj", "{1EC414E2-D280-4110-8B3C-4EC1E7FAC1B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeptunoNet2023.Servicios", "NeptunoNet2023.Servicios\NeptunoNet2023.Servicios.csproj", "{2D5B2604-C7B1-4A2E-9C42-371869CB92FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeptunoNet2023.Servicios", "NeptunoNet2023.Servicios\NeptunoNet2023.Servicios.csproj", "{2D5B2604-C7B1-4A2E-9C42-371869CB92FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeptunoNet2023.Windows", "NeptunoNet2023.Windows\NeptunoNet2023.Windows.csproj", "{6BEFFB88-A8B4-4C9B-813E-BDFE8C7817D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeptunoNet2023.Windows", "NeptunoNet2023.Windows\NeptunoNet2023.Windows.csproj", "{6BEFFB88-A8B4-4C9B-813E-BDFE8C7817D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

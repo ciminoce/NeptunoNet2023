@@ -1,31 +1,51 @@
-﻿using NeptunoNet2023.DatosSql;
+﻿using NeptunoNet2023.Comun.Interfaces;
+using NeptunoNet2023.DatosSql;
 using NeptunoNet2023.Entidades.Entidades;
+using NeptunoNet2023.Servicios.Interfaces;
 
 namespace NeptunoNet2023.Servicios.Servicios
 {
-	public class ServiciosPaises
+	public class ServiciosPaises : IServiciosPaises
 	{
-		private readonly RepositorioPaises _repositorioPaises;
-        public ServiciosPaises()
-        {
-            _repositorioPaises = new RepositorioPaises();
-        }
+		private readonly IRepositorioPaises _repositorioPaises;
+		public ServiciosPaises()
+		{
+			_repositorioPaises = new RepositorioPaises();
+		}
 
-        public void Borrar(int paisId)
-        {
+		public int Borrar(Pais pais)
+		{
 			try
 			{
-				_repositorioPaises.Borrar(paisId);
+				return _repositorioPaises.Borrar(pais);
 			}
 			catch (Exception ex)
 			{
 
 				throw ex;
 			}
-        }
+		}
 
-        public List<Pais> GetAll()
-        {
+		public bool EstaRelacionado(Pais pais)
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool Existe(Pais pais)
+		{
+			try
+			{
+				return _repositorioPaises.Existe(pais);
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
+		public List<Pais> GetAll()
+		{
 			try
 			{
 				return _repositorioPaises.GetAll();
@@ -35,20 +55,20 @@ namespace NeptunoNet2023.Servicios.Servicios
 
 				throw ex;
 			}
-        }
+		}
 
-		public void Guardar(Pais pais)
+		public int Guardar(Pais pais)
 		{
 			try
 			{
 
-				if (pais.PaisId==0)
+				if (pais.PaisId == 0)
 				{
-					_repositorioPaises.Agregar(pais);
+					return _repositorioPaises.Agregar(pais);
 				}
 				else
 				{
-					_repositorioPaises.Editar(pais);
+					return _repositorioPaises.Editar(pais);
 				}
 			}
 			catch (Exception ex)
@@ -57,5 +77,5 @@ namespace NeptunoNet2023.Servicios.Servicios
 				throw ex;
 			}
 		}
-    }
+	}
 }
