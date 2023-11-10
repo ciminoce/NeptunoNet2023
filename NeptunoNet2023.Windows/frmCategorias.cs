@@ -1,5 +1,6 @@
 ﻿using NeptunoNet2023.Entidades.Entidades;
 using NeptunoNet2023.Servicios.Servicios;
+using NeptunoNet2023.Windows.Helpers;
 
 namespace NeptunoNet2023.Windows
 {
@@ -33,33 +34,17 @@ namespace NeptunoNet2023.Windows
         }
         private void MostrarDatosEnGrilla()
         {
-            dgvDatos.Rows.Clear();
+            GridHelper.LimpiarGrilla(dgvDatos);
             foreach (var item in listaCategorias)
             {
-                DataGridViewRow r = ConstruirFila();
-                SetearFila(r, item);
-                AgregarFila(r);
+                DataGridViewRow r =GridHelper.ConstruirFila(dgvDatos);
+                GridHelper.SetearFila(r, item);
+                GridHelper.AgregarFila(r,dgvDatos);
             }
         }
 
-        private void SetearFila(DataGridViewRow r, Categoria item)
-        {
-            r.Cells[colCategoria.Index].Value = item.NombreCategoria;
-            r.Cells[colDescripcion.Index].Value = item.Descripcion;
-            r.Tag = item;
-        }
 
-        private void AgregarFila(DataGridViewRow r)
-        {
-            dgvDatos.Rows.Add(r);
-        }
 
-        private DataGridViewRow ConstruirFila()
-        {
-            DataGridViewRow r = new DataGridViewRow();
-            r.CreateCells(dgvDatos);
-            return r;
-        }
 
     }
 }

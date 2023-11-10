@@ -6,23 +6,23 @@ using System.Data.SqlClient;
 
 namespace NeptunoNet2023.DatosSql
 {
-	public class RepositorioPaises:IRepositorioPaises
+	public class RepositorioPaises : IRepositorioPaises
 	{
 		private string connectionString;
-        public RepositorioPaises()
-        {
+		public RepositorioPaises()
+		{
 			connectionString = ConfigurationManager.ConnectionStrings["MiConexion"].ToString();
 		}
-        public List<Pais> GetAll()
+		public List<Pais> GetAll()
 		{
-			var listaPaises=new List<Pais>();
-			using (var conn=new SqlConnection(connectionString))
+			var listaPaises = new List<Pais>();
+			using (var conn = new SqlConnection(connectionString))
 			{
 				conn.Open();
 				string selectQuery = "SELECT PaisId, NombrePais, RowVersion FROM Paises";
 				using (var command = new SqlCommand(selectQuery, conn))
 				{
-					using (var reader=command.ExecuteReader())
+					using (var reader = command.ExecuteReader())
 					{
 						while (reader.Read())
 						{
@@ -49,11 +49,11 @@ namespace NeptunoNet2023.DatosSql
 		public int Agregar(Pais pais)
 		{
 			int registrosAfectados = 0;
-			using (var conn=new SqlConnection(connectionString))
+			using (var conn = new SqlConnection(connectionString))
 			{
 				conn.Open();
-				string insertQuery = @"INSERT INTO Paises (NombrePais) VALUES(@NombrePais);
-					SELECT SCOPE_IDENTITY()";
+				string insertQuery = @"INSERT INTO Paises (NombrePais) VALUES(@NombrePais)";
+
 				using (var cmd = new SqlCommand(insertQuery, conn))
 				{
 					cmd.Parameters.AddWithValue("@NombrePais", pais.NombrePais);
@@ -61,59 +61,72 @@ namespace NeptunoNet2023.DatosSql
 					//               cmd.Parameters.Add("@NombrePais", SqlDbType.NVarChar);
 					//cmd.Parameters["@NombrePais"].Value = pais.NombrePais;
 
-					//cmd.ExecuteNonQuery();
-					int id=Convert.ToInt32(cmd.ExecuteScalar());
-					pais.PaisId= id;
-                }
-				string selectQuery = @"SELECT RowVersion FROM Paises 
-							WHERE PaisId=@PaisId";
-				using (var comando = new SqlCommand(selectQuery, conn))
-				{
-					comando.Parameters.Add("@PaisId", SqlDbType.Int);
-					comando.Parameters["@PaisId"].Value = pais.PaisId;
+					registrosAfectados = cmd.ExecuteNonQuery();
+				}
 
-					var row = (byte[])comando.ExecuteScalar();
-					pais.RowVersion = row;
+				if (registrosAfectados > 0)
+				{
+					string selectQuery = @"SELECT @@IDENTITY";
+					using (var comando = new SqlCommand(selectQuery, conn))
+					{
+
+
+						var id = Convert.ToInt32(comando.ExecuteScalar());
+						pais.PaisId = id;
+
+					}
+
+
+					selectQuery = @"SELECT RowVersion FROM Paises 
+							WHERE PaisId=@PaisId";
+					using (var comando = new SqlCommand(selectQuery, conn))
+					{
+						comando.Parameters.Add("@PaisId", SqlDbType.Int);
+						comando.Parameters["@PaisId"].Value = pais.PaisId;
+
+						var row = (byte[])comando.ExecuteScalar();
+						pais.RowVersion = row;
+
+					}
 
 				}
-				registrosAfectados = 1;
 				return registrosAfectados;
 
 			}
 		}
 
-        public int Borrar(Pais pais)
-        {
+		public int Borrar(Pais pais)
+		{
 			int registrosAfectados = 0;
-			using (var conn=new SqlConnection(connectionString))
+			using (var conn = new SqlConnection(connectionString))
 			{
 				conn.Open();
 				string deleteQuery = @"DELETE FROM Paises WHERE PaisId=@PaisId AND 
 					RowVersion=@RowVersion";
-				using (var cmd=new SqlCommand(deleteQuery,conn))
+				using (var cmd = new SqlCommand(deleteQuery, conn))
 				{
 					cmd.Parameters.Add("@PaisId", SqlDbType.Int);
-					cmd.Parameters["@PaisId"].Value=pais.PaisId;
+					cmd.Parameters["@PaisId"].Value = pais.PaisId;
 
 					cmd.Parameters.Add("@RowVersion", SqlDbType.Timestamp);
 					cmd.Parameters["@RowVersion"].Value = pais.RowVersion;
 
-					registrosAfectados=cmd.ExecuteNonQuery();
+					registrosAfectados = cmd.ExecuteNonQuery();
 				}
 			}
 			return registrosAfectados;
-        }
+		}
 
-        public int Editar(Pais pais)
-        {
+		public int Editar(Pais pais)
+		{
 			int registrosAfectados = 0;
-            using (var conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
+			using (var conn = new SqlConnection(connectionString))
+			{
+				conn.Open();
 				string updateQuery = @"UPDATE Paises SET NombrePais=@NombrePais 
 							WHERE PaisId=@PaisId AND RowVersion=@RowVersion";
-                using (var cmd = new SqlCommand(updateQuery, conn))
-                {
+				using (var cmd = new SqlCommand(updateQuery, conn))
+				{
 
 					cmd.Parameters.Add("@NombrePais", SqlDbType.NVarChar);
 					cmd.Parameters["@NombrePais"].Value = pais.NombrePais;
@@ -127,8 +140,8 @@ namespace NeptunoNet2023.DatosSql
 					//cmd.Parameters.AddWithValue("@PaisId",pais.PaisId);
 					//cmd.Parameters.AddWithValue("@RowVersion", pais.RowVersion);
 
-					registrosAfectados =cmd.ExecuteNonQuery();
-					if (registrosAfectados>0)
+					registrosAfectados = cmd.ExecuteNonQuery();
+					if (registrosAfectados > 0)
 					{
 						string selectQuery = @"SELECT RowVersion FROM Paises 
 							WHERE PaisId=@PaisId";
@@ -144,13 +157,13 @@ namespace NeptunoNet2023.DatosSql
 
 					}
 				}
-            }
+			}
 			return registrosAfectados;
-        }
+		}
 
 		public bool Existe(Pais pais)
 		{
-			
+
 			using (var conn = new SqlConnection(connectionString))
 			{
 				conn.Open();
@@ -164,7 +177,7 @@ namespace NeptunoNet2023.DatosSql
 						cmd.Parameters.Add("@NombrePais", SqlDbType.NVarChar);
 						cmd.Parameters["@NombrePais"].Value = pais.NombrePais;
 
-						return Convert.ToInt32(cmd.ExecuteScalar())>0;
+						return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
 					}
 
 				}
@@ -187,13 +200,50 @@ namespace NeptunoNet2023.DatosSql
 				}
 
 			}
-			
+
 
 		}
 
 		public bool EstaRelacionado(Pais pais)
 		{
-			throw new NotImplementedException();
+			int registros = 0;
+
+			using (var conn = new SqlConnection(connectionString))
+			{
+				conn.Open();
+				string selectQuery = @"SELECT COUNT(*) FROM Ciudades WHERE PaisId=@PaisId";
+				using (var comando = new SqlCommand(selectQuery, conn))
+				{
+					comando.Parameters.AddWithValue("@PaisId", pais.PaisId);
+					registros=(int) comando.ExecuteScalar();
+				}
+
+			}
+			return registros > 0;
+		}
+
+		public Pais GetPais(int paisId)
+		{
+			Pais pais = null;
+			using (var conn=new SqlConnection(connectionString))
+			{
+				conn.Open();
+				string selectQuery = @"SELECT PaisId, NombrePais, RowVersion FROM Paises
+						WHERE PaisId=@PaisId";
+				using (var cmd=new SqlCommand(selectQuery,conn))
+				{
+					cmd.Parameters.AddWithValue("@PaisId", paisId);
+					using (var reader=cmd.ExecuteReader())
+					{
+						if (reader.HasRows)
+						{
+							reader.Read();
+							pais = ConstruirPais(reader);
+						}
+					}
+				}
+			}
+			return pais;
 		}
 	}
 }

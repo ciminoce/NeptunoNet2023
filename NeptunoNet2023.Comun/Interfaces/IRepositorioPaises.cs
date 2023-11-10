@@ -11,5 +11,6 @@ namespace NeptunoNet2023.Comun.Interfaces
 
 		bool Existe(Pais pais);
 		bool EstaRelacionado(Pais pais);
+		Pais GetPais(int paisId);
 	}
 }

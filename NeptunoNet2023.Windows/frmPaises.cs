@@ -1,5 +1,6 @@
 ﻿using NeptunoNet2023.Entidades.Entidades;
 using NeptunoNet2023.Servicios.Servicios;
+using NeptunoNet2023.Windows.Helpers;
 
 namespace NeptunoNet2023.Windows
 {
@@ -25,12 +26,12 @@ namespace NeptunoNet2023.Windows
 
         private void MostrarDatosEnGrilla()
         {
-            dgvDatos.Rows.Clear();
+            GridHelper.LimpiarGrilla(dgvDatos);
             foreach (var item in listaPaises)
             {
-                DataGridViewRow r = ConstruirFila();
-                SetearFila(r, item);
-                AgregarFila(r);
+                DataGridViewRow r = GridHelper.ConstruirFila(dgvDatos);
+                GridHelper.SetearFila(r, item);
+                GridHelper.AgregarFila(r, dgvDatos);
             }
         }
 
@@ -38,18 +39,6 @@ namespace NeptunoNet2023.Windows
         {
             r.Cells[colPais.Index].Value = item.NombrePais;
             r.Tag = item;
-        }
-
-        private void AgregarFila(DataGridViewRow r)
-        {
-            dgvDatos.Rows.Add(r);
-        }
-
-        private DataGridViewRow ConstruirFila()
-        {
-            DataGridViewRow r = new DataGridViewRow();
-            r.CreateCells(dgvDatos);
-            return r;
         }
 
         private void tsbNuevo_Click(object sender, EventArgs e)
@@ -67,9 +56,9 @@ namespace NeptunoNet2023.Windows
                 if (!_serviciosPaises.Existe(pais))
                 {
                     _serviciosPaises.Guardar(pais);
-                    var r = ConstruirFila();
-                    SetearFila(r, pais);
-                    AgregarFila(r);
+                    var r =GridHelper.ConstruirFila(dgvDatos);
+                    GridHelper.SetearFila(r, pais);
+                    GridHelper.AgregarFila(r, dgvDatos);
                     MessageBox.Show("Registro Agregado Satisfactoriamente!!!",
                         "Mensaje",
                         MessageBoxButtons.OK,
@@ -119,38 +108,44 @@ namespace NeptunoNet2023.Windows
             }
             try
             {
-                //OJO Falta ver que no esté relacionado antes
 
-                int registrosAfectados=_serviciosPaises.Borrar(pais);
-                if (registrosAfectados>0)
+
+                if (!_serviciosPaises.EstaRelacionado(pais))
                 {
-                    QuitarFila(r);
-                    MessageBox.Show("Registro Borrado Satisfactoriamente!!!",
-                        "Mensaje",
+                    int registrosAfectados = _serviciosPaises.Borrar(pais);
+                    if (registrosAfectados > 0)
+                    {
+                        GridHelper.AgregarFila(r, dgvDatos);
+                        MessageBox.Show("Registro Borrado Satisfactoriamente!!!",
+                            "Mensaje",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("Registro modificado o borrado por otro usuario!!!",
+                        "Advertencia",
                         MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                        MessageBoxIcon.Warning);
+                        RecargarGrilla();
+
+                    }
 
                 }
                 else
                 {
-					MessageBox.Show("Registro modificado o borrado por otro usuario!!!",
-                    "Advertencia",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-					RecargarGrilla();
+					MessageBox.Show("Registro Relacionado...Baja denegada!!!",
+	                    "Error",
+	                    MessageBoxButtons.OK,
+	                    MessageBoxIcon.Error);
 
 				}
-
 			}
             catch (Exception ex)
             {
 
-                Exception exc = ex;
-                if (ex.Message != null && ex.Message.Contains("REFERENCE"))
-                {
-                    exc = new Exception("Registro Relacionado...Baja denegada!!!");
-                }
-                MessageBox.Show(exc.Message,
+                MessageBox.Show(ex.Message,
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
@@ -158,10 +153,6 @@ namespace NeptunoNet2023.Windows
             }
         }
 
-        private void QuitarFila(DataGridViewRow r)
-        {
-            dgvDatos.Rows.Remove(r);
-        }
 
         private void tsbEditar_Click(object sender, EventArgs e)
         {

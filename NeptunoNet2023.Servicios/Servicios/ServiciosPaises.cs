@@ -28,7 +28,15 @@ namespace NeptunoNet2023.Servicios.Servicios
 
 		public bool EstaRelacionado(Pais pais)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				return _repositorioPaises.EstaRelacionado(pais);
+			}
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
 		}
 
 		public bool Existe(Pais pais)
