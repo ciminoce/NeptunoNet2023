@@ -1,4 +1,5 @@
-﻿using NeptunoNet2023.Entidades.Entidades;
+﻿using NeptunoNet2023.Entidades.Dtos.Ciudad;
+using NeptunoNet2023.Entidades.Entidades;
 
 namespace NeptunoNet2023.Windows.Helpers
 {
@@ -32,10 +33,9 @@ namespace NeptunoNet2023.Windows.Helpers
 					r.Cells[0].Value = categoria.NombreCategoria;
 					r.Cells[1].Value = categoria.Descripcion;
 					break;
-				case Ciudad ciudad:
+				case CiudadListDto ciudad:
 					r.Cells[0].Value = ciudad.NombreCiudad;
-					//r.Cells[1].Value = ciudad.Pais;
-					r.Cells[1].Value = ciudad.Pais.NombrePais;
+					r.Cells[1].Value = ciudad.NombrePais;
 					break;
 				default:
 					break;

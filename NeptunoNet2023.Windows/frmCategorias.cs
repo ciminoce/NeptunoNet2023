@@ -7,7 +7,7 @@ namespace NeptunoNet2023.Windows
     public partial class frmCategorias : Form
     {
         private readonly ServiciosCategorias _serviciosCategorias;
-        private List<Categoria> listaCategorias;
+        private List<Categoria>? listaCategorias;
         public frmCategorias()
         {
             InitializeComponent();

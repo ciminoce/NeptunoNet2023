@@ -1,5 +1,6 @@
 ﻿using NeptunoNet2023.Comun.Interfaces;
 using NeptunoNet2023.DatosSql;
+using NeptunoNet2023.Entidades.Dtos.Ciudad;
 using NeptunoNet2023.Entidades.Entidades;
 using NeptunoNet2023.Servicios.Interfaces;
 
@@ -8,24 +9,16 @@ namespace NeptunoNet2023.Servicios.Servicios
 	public class ServiciosCiudades : IServiciosCiudades
 	{
 		private readonly IRepositorioCiudades _repositorioCiudades;
-		private readonly IRepositorioPaises _repositorioPaises;
 		public ServiciosCiudades()
 		{
 			_repositorioCiudades = new RepositorioCiudades();
-			_repositorioPaises=new RepositorioPaises();
 		}
 
-		public List<Ciudad> GetAll()
+		public bool Existe(Ciudad ciudad)
 		{
 			try
 			{
-				var listaCiudades=_repositorioCiudades.GetAll();//100+1
-				foreach (var itemCiudad in listaCiudades)
-				{
-					var paisDeCiudad = _repositorioPaises.GetPais(itemCiudad.PaisId);
-					itemCiudad.Pais = paisDeCiudad;
-				}
-				return listaCiudades;
+				return _repositorioCiudades.Existe(ciudad);
 			}
 			catch (Exception)
 			{
@@ -33,5 +26,48 @@ namespace NeptunoNet2023.Servicios.Servicios
 				throw;
 			}
 		}
-	}
+        public List<CiudadListDto> GetAll()
+		{
+			try
+			{
+				
+				return _repositorioCiudades.GetAll();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
+        public CiudadListDto GetCiudadPorId(int ciudadId)
+        {
+			try
+			{
+				return _repositorioCiudades.GetCiudadPorId(ciudadId);
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+        }
+
+        public int Guardar(Ciudad ciudad)
+        {
+			try
+			{
+				if (ciudad.CiudadId==0)
+				{
+					return _repositorioCiudades.Agregar(ciudad);
+				}
+				return 0;//TODO: ojo arreglar
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+        }
+    }
 }

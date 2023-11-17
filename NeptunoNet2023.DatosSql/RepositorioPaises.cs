@@ -19,7 +19,8 @@ namespace NeptunoNet2023.DatosSql
 			using (var conn = new SqlConnection(connectionString))
 			{
 				conn.Open();
-				string selectQuery = "SELECT PaisId, NombrePais, RowVersion FROM Paises";
+				string selectQuery = @"SELECT PaisId, NombrePais, RowVersion 
+					FROM Paises ORDER BY NombrePais";
 				using (var command = new SqlCommand(selectQuery, conn))
 				{
 					using (var reader = command.ExecuteReader())
