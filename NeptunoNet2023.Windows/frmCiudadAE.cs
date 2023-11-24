@@ -21,6 +21,12 @@ namespace NeptunoNet2023.Windows
         {
             base.OnLoad(e);
             CargarDatosComboPaises(ref cboPaises);
+
+            if (ciudad != null)
+            {
+                txtCiudad.Text = ciudad.NombreCiudad;
+                cboPaises.SelectedValue = ciudad.PaisId;
+            }
         }
 
         private void CargarDatosComboPaises(ref ComboBox cbo)
@@ -74,6 +80,11 @@ namespace NeptunoNet2023.Windows
         public Ciudad GetCiudad()
         {
             return ciudad;
+        }
+
+        public void SetCiudad(Ciudad ciudad)
+        {
+            this.ciudad = ciudad;
         }
     }
 }

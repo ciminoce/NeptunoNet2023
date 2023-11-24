@@ -7,8 +7,11 @@ namespace NeptunoNet2023.Comun.Interfaces
     {
         int Agregar(Ciudad ciudad);
         List<CiudadListDto> GetAll();
-        CiudadListDto GetCiudadPorId(int ciudadId);
-
+        CiudadListDto GetCiudadDtoPorId(int ciudadId);
+        Ciudad GetCiudadPorId(int ciudadId);
         bool Existe(Ciudad ciudad);
+        bool EstaRelacionado(Ciudad ciudad);
+        int Borrar(Ciudad ciudad);
+        int Editar(Ciudad ciudad);
     }
 }

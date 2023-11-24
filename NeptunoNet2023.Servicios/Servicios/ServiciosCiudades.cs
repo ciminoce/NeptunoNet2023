@@ -14,7 +14,33 @@ namespace NeptunoNet2023.Servicios.Servicios
 			_repositorioCiudades = new RepositorioCiudades();
 		}
 
-		public bool Existe(Ciudad ciudad)
+        public int Borrar(Ciudad ciudad)
+        {
+			try
+			{
+				return _repositorioCiudades.Borrar(ciudad);
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+        }
+
+        public bool EstaRelacionado(Ciudad ciudad)
+        {
+			try
+			{
+				return _repositorioCiudades.EstaRelacionado(ciudad);
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+        }
+
+        public bool Existe(Ciudad ciudad)
 		{
 			try
 			{
@@ -40,7 +66,20 @@ namespace NeptunoNet2023.Servicios.Servicios
 			}
 		}
 
-        public CiudadListDto GetCiudadPorId(int ciudadId)
+        public CiudadListDto GetCiudadDtoPorId(int ciudadId)
+        {
+			try
+			{
+				return _repositorioCiudades.GetCiudadDtoPorId(ciudadId);
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+        }
+
+        public Ciudad GetCiudadPorId(int ciudadId)
         {
 			try
 			{
@@ -61,7 +100,10 @@ namespace NeptunoNet2023.Servicios.Servicios
 				{
 					return _repositorioCiudades.Agregar(ciudad);
 				}
-				return 0;//TODO: ojo arreglar
+				else
+				{
+					return _repositorioCiudades.Editar(ciudad);
+				}
 			}
 			catch (Exception)
 			{

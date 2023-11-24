@@ -18,16 +18,7 @@ namespace NeptunoNet2023.Windows
 
         private void frmCiudades_Load(object sender, EventArgs e)
         {
-            try
-            {
-                listaCiudades = _serviciosCiudades.GetAll();
-                MostrarDatosEnGrilla();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            RecargarGrilla();
         }
 
         private void MostrarDatosEnGrilla()
@@ -49,8 +40,8 @@ namespace NeptunoNet2023.Windows
         private void tsbNuevo_Click(object sender, EventArgs e)
         {
             frmCiudadAE frm = new frmCiudadAE() { Text = "Nueva Ciudad" };
-            DialogResult dr=frm.ShowDialog(this);
-            if (dr==DialogResult.Cancel) { return; }
+            DialogResult dr = frm.ShowDialog(this);
+            if (dr == DialogResult.Cancel) { return; }
             try
             {
                 Ciudad ciudad = frm.GetCiudad();
@@ -61,7 +52,7 @@ namespace NeptunoNet2023.Windows
                     if (registrosAfectados > 0)
                     {
                         CiudadListDto ciudadListDto = _serviciosCiudades
-                        .GetCiudadPorId(ciudad.CiudadId);
+                        .GetCiudadDtoPorId(ciudad.CiudadId);
                         DataGridViewRow r = GridHelper.ConstruirFila(dgvDatos);
                         GridHelper.SetearFila(r, ciudadListDto);
                         GridHelper.AgregarFila(r, dgvDatos);
@@ -81,7 +72,6 @@ namespace NeptunoNet2023.Windows
                     MessageBox.Show("Ciudad Existente!!!", "Error", MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
 
-
                 }
             }
             catch (Exception ex)
@@ -89,6 +79,138 @@ namespace NeptunoNet2023.Windows
 
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+            }
+        }
+
+        private void tsbBorrar_Click(object sender, EventArgs e)
+        {
+            if (dgvDatos.SelectedRows.Count == 0)
+            {
+                return;
+            }
+            DataGridViewRow r = dgvDatos.SelectedRows[0];
+            CiudadListDto ciudadDto = r.Tag as CiudadListDto;
+            try
+            {
+                DialogResult dr = MessageBox.Show($"¿Desea dar de baja la ciudad de {ciudadDto.NombreCiudad}?",
+                    "Confirmar Borrado",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
+                if (dr == DialogResult.No) { return; }
+                Ciudad ciudad = _serviciosCiudades.GetCiudadPorId(ciudadDto.CiudadId);
+                if (ciudad != null)
+                {
+                    if (!_serviciosCiudades.EstaRelacionado(ciudad))
+                    {
+                        int registrosAfectados = _serviciosCiudades.Borrar(ciudad);
+                        if (registrosAfectados > 0)
+                        {
+                            GridHelper.QuitarFila(r, dgvDatos);
+                            MessageBox.Show("Registro Borrado", "Mensaje",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Registro modificado por otro usuario!!",
+                                "Advertencia",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
+                            RecargarGrilla();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Registro relacionado!!!", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show("Registro borrado por otro usuario!!",
+                        "Advertencia",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    RecargarGrilla();
+
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+        private void RecargarGrilla()
+        {
+            try
+            {
+                listaCiudades = _serviciosCiudades.GetAll();
+                MostrarDatosEnGrilla();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private void tsbEditar_Click(object sender, EventArgs e)
+        {
+            if (dgvDatos.SelectedRows.Count==0)
+            {
+                return;
+            }
+            DataGridViewRow r = dgvDatos.SelectedRows[0];
+            CiudadListDto ciudadDto = (CiudadListDto)r.Tag;
+            CiudadListDto ciudadCopia = (CiudadListDto)ciudadDto.Clone();
+            Ciudad ciudad = _serviciosCiudades.GetCiudadPorId(ciudadDto.CiudadId);
+            frmCiudadAE frm = new frmCiudadAE() { Text = "Editar Ciudad" };
+            frm.SetCiudad(ciudad);
+            DialogResult dr = frm.ShowDialog(this);
+            if (dr == DialogResult.Cancel) { return; }
+            try
+            {
+                ciudad = frm.GetCiudad();
+                if(!_serviciosCiudades.Existe(ciudad))
+                {
+                    int registrosAfectados = _serviciosCiudades.Guardar(ciudad);
+                    if (registrosAfectados>0)
+                    {
+                        ciudadDto = _serviciosCiudades.GetCiudadDtoPorId(ciudad.CiudadId);
+                        GridHelper.SetearFila(r, ciudadDto);
+                        MessageBox.Show("Registro Editado", "Mensaje",
+                           MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Registro borrado o modificado por otro usuario!!",
+                            "Advertencia",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        RecargarGrilla();
+
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Registro Duplicado!!!","Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    GridHelper.SetearFila(r, ciudadCopia);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                GridHelper.SetearFila(r, ciudadCopia);
             }
         }
     }

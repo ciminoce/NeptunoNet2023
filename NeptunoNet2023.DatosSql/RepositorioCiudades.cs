@@ -2,6 +2,7 @@
 using NeptunoNet2023.Entidades.Dtos.Ciudad;
 using NeptunoNet2023.Entidades.Entidades;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace NeptunoNet2023.DatosSql
@@ -97,7 +98,7 @@ namespace NeptunoNet2023.DatosSql
             return registrosAfectados;
         }
 
-        public CiudadListDto GetCiudadPorId(int ciudadId)
+        public CiudadListDto GetCiudadDtoPorId(int ciudadId)
         {
             CiudadListDto ciudadDto = null;
             using (var conn = new SqlConnection(_connectionString))
@@ -162,6 +163,106 @@ namespace NeptunoNet2023.DatosSql
 
             }
             return registros > 0;
+        }
+
+        public Ciudad GetCiudadPorId(int ciudadId)
+        {
+            Ciudad ciudad = null;
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string selectQuery = @"SELECT c.CiudadId, c.NombreCiudad, c.PaisId, c.RowVersion 
+					FROM Ciudades c 
+					WHERE CiudadId=@CiudadId";
+                using (var cmd = new SqlCommand(selectQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@CiudadId", ciudadId);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            ciudad = ConstruirCiudad(reader);
+                        }
+                    }
+                }
+            }
+            return ciudad;
+        }
+
+        public bool EstaRelacionado(Ciudad ciudad)
+        {
+            int cantidad = 0;
+            using (var conn=new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string selectQuery = @"SELECT
+                    (SELECT COUNT(*) FROM Clientes WHERE CiudadId = @CiudadId) +
+                    (SELECT COUNT(*) FROM Proveedores WHERE CiudadId =@CiudadId)
+                    AS TotalCantidad";
+                using (var cmd=new SqlCommand(selectQuery,conn))
+                {
+                    cmd.Parameters.AddWithValue("@CiudadId", ciudad.CiudadId);
+                    
+                    cantidad=(int)cmd.ExecuteScalar();
+                }
+            }
+            return cantidad > 0;
+        }
+
+        public int Borrar(Ciudad ciudad)
+        {
+            int registrosAfectados = 0;
+            using (var conn=new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string deleteQuery = @"DELETE FROM Ciudades WHERE CiudadId=@CiudadId 
+                        AND RowVersion=@RowVersion";
+                using (var cmd=new SqlCommand(deleteQuery,conn))
+                {
+                    cmd.Parameters.AddWithValue("@CiudadId", ciudad.CiudadId);
+                    cmd.Parameters.AddWithValue("@RowVersion", ciudad.RowVersion);
+
+                    registrosAfectados=cmd.ExecuteNonQuery();
+                }
+            }
+            return registrosAfectados;
+        }
+
+        public int Editar(Ciudad ciudad)
+        {
+            int registrosAfectados = 0;
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string updateQuery = @"UPDATE Ciudades SET NombreCiudad=@NombreCiudad,
+                            PaisId=@PaisId
+							WHERE CiudadId=@CiudadId AND RowVersion=@RowVersion";
+                using (var cmd = new SqlCommand(updateQuery, conn))
+                {
+
+                    cmd.Parameters.AddWithValue("@NombreCiudad", ciudad.NombreCiudad);
+                    cmd.Parameters.AddWithValue("@PaisId", ciudad.PaisId);
+                    cmd.Parameters.AddWithValue("@CiudadId", ciudad.CiudadId);
+                    cmd.Parameters.AddWithValue("@RowVersion", ciudad.RowVersion);
+                    registrosAfectados = cmd.ExecuteNonQuery();
+                    if (registrosAfectados > 0)
+                    {
+                        string selectQuery = @"SELECT RowVersion FROM Ciudades 
+							WHERE CiudadId=@CiudadId";
+                        using (var comando = new SqlCommand(selectQuery, conn))
+                        {
+                            comando.Parameters.AddWithValue("@CiudadId",ciudad.CiudadId);
+
+                            var row = (byte[])comando.ExecuteScalar();
+                            ciudad.RowVersion = row;
+
+                        }
+
+                    }
+                }
+            }
+            return registrosAfectados;
         }
     }
 }

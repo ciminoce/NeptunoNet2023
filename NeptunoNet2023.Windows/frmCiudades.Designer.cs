@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             panel2 = new Panel();
             dgvDatos = new DataGridView();
             colCiudad = new DataGridViewTextBoxColumn();
@@ -63,8 +63,8 @@
             dgvDatos.AllowUserToDeleteRows = false;
             dgvDatos.AllowUserToResizeColumns = false;
             dgvDatos.AllowUserToResizeRows = false;
-            dataGridViewCellStyle3.BackColor = Color.FromArgb(224, 224, 224);
-            dgvDatos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
+            dgvDatos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvDatos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDatos.Columns.AddRange(new DataGridViewColumn[] { colCiudad, colPais });
             dgvDatos.Dock = DockStyle.Fill;
@@ -128,6 +128,7 @@
             tsbBorrar.Size = new Size(44, 59);
             tsbBorrar.Text = "Borrar";
             tsbBorrar.TextImageRelation = TextImageRelation.ImageAboveText;
+            tsbBorrar.Click += tsbBorrar_Click;
             // 
             // tsbEditar
             // 
@@ -138,6 +139,7 @@
             tsbEditar.Size = new Size(44, 59);
             tsbEditar.Text = "Editar";
             tsbEditar.TextImageRelation = TextImageRelation.ImageAboveText;
+            tsbEditar.Click += tsbEditar_Click;
             // 
             // toolStripSeparator1
             // 
