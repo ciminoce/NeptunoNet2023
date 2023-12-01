@@ -1,4 +1,5 @@
 ﻿using NeptunoNet2023.Entidades.Dtos.Ciudad;
+using NeptunoNet2023.Entidades.Dtos.Cliente;
 using NeptunoNet2023.Entidades.Entidades;
 
 namespace NeptunoNet2023.Windows.Helpers
@@ -36,6 +37,11 @@ namespace NeptunoNet2023.Windows.Helpers
 				case CiudadListDto ciudad:
 					r.Cells[0].Value = ciudad.NombreCiudad;
 					r.Cells[1].Value = ciudad.NombrePais;
+					break;
+				case ClienteListDto cliente:
+					r.Cells[0].Value= cliente.NombreCliente;
+					r.Cells[1].Value = cliente.NombrePais;
+					r.Cells[2].Value = cliente.NombreCiudad;
 					break;
 				default:
 					break;

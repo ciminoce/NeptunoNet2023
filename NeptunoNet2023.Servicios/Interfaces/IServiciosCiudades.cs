@@ -5,7 +5,6 @@ namespace NeptunoNet2023.Servicios.Interfaces
 {
 	public interface IServiciosCiudades
 	{
-		List<CiudadListDto> GetAll();
         CiudadListDto GetCiudadDtoPorId(int ciudadId);
         Ciudad GetCiudadPorId(int ciudadId);
         int Guardar(Ciudad ciudad);
@@ -13,5 +12,6 @@ namespace NeptunoNet2023.Servicios.Interfaces
         bool Existe(Ciudad ciudad);
         bool EstaRelacionado(Ciudad ciudad);
         int Borrar(Ciudad ciudad);
+        List<CiudadListDto>? GetAll(Pais paisFiltro=null);
     }
 }

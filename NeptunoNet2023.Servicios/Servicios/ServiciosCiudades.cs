@@ -52,19 +52,20 @@ namespace NeptunoNet2023.Servicios.Servicios
 				throw;
 			}
 		}
-        public List<CiudadListDto> GetAll()
-		{
-			try
-			{
-				
-				return _repositorioCiudades.GetAll();
-			}
-			catch (Exception)
-			{
 
-				throw;
-			}
-		}
+        public List<CiudadListDto>? GetAll(Pais paisFiltro=null)
+        {
+            try
+            {
+
+                return _repositorioCiudades.GetAll(paisFiltro);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public CiudadListDto GetCiudadDtoPorId(int ciudadId)
         {

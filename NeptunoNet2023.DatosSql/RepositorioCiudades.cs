@@ -2,7 +2,6 @@
 using NeptunoNet2023.Entidades.Dtos.Ciudad;
 using NeptunoNet2023.Entidades.Entidades;
 using System.Configuration;
-using System.Data;
 using System.Data.SqlClient;
 
 namespace NeptunoNet2023.DatosSql
@@ -14,8 +13,7 @@ namespace NeptunoNet2023.DatosSql
         {
             _connectionString = ConfigurationManager.ConnectionStrings["MiConexion"].ToString();
         }
-
-        public List<CiudadListDto> GetAll()
+        public List<CiudadListDto>? GetAll(Pais paisFiltro=null)
         {
             List<CiudadListDto> lista = new List<CiudadListDto>();
             using (var conn = new SqlConnection(_connectionString))
@@ -23,9 +21,24 @@ namespace NeptunoNet2023.DatosSql
                 conn.Open();
                 string selectQuery = @"SELECT c.CiudadId, c.NombreCiudad, p.NombrePais 
 						FROM Ciudades c INNER JOIN Paises p 
-						ON c.PaisId=p.PaisId ORDER BY c.NombreCiudad";
+						ON c.PaisId=p.PaisId";
+                string conditional = " WHERE c.PaisId=@PaisId ";                       
+                string order=" ORDER BY c.NombreCiudad";
+
+                if (paisFiltro == null)
+                {
+                    selectQuery += order;
+                }
+                else
+                {
+                    selectQuery = string.Concat(selectQuery, conditional, order);
+                }
                 using (var cmd = new SqlCommand(selectQuery, conn))
                 {
+                    if (paisFiltro != null)
+                    {
+                        cmd.Parameters.AddWithValue("@PaisId", paisFiltro.PaisId);
+                    }
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -133,12 +146,12 @@ namespace NeptunoNet2023.DatosSql
                 {
                     string selectQuery = @"SELECT COUNT(*) AS Cantidad FROM Ciudades
                         WHERE NombreCiudad=@Nombre AND PaisId=@PaisId";
-                    using (var cmd=new SqlCommand(selectQuery,conn))
+                    using (var cmd = new SqlCommand(selectQuery, conn))
                     {
                         cmd.Parameters.AddWithValue("@Nombre", ciudad.NombreCiudad);
                         cmd.Parameters.AddWithValue("@PaisId", ciudad.PaisId);
 
-                        registros=Convert.ToInt32(cmd.ExecuteScalar());
+                        registros = Convert.ToInt32(cmd.ExecuteScalar());
 
                     }
 
@@ -193,18 +206,18 @@ namespace NeptunoNet2023.DatosSql
         public bool EstaRelacionado(Ciudad ciudad)
         {
             int cantidad = 0;
-            using (var conn=new SqlConnection(_connectionString))
+            using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 string selectQuery = @"SELECT
                     (SELECT COUNT(*) FROM Clientes WHERE CiudadId = @CiudadId) +
                     (SELECT COUNT(*) FROM Proveedores WHERE CiudadId =@CiudadId)
                     AS TotalCantidad";
-                using (var cmd=new SqlCommand(selectQuery,conn))
+                using (var cmd = new SqlCommand(selectQuery, conn))
                 {
                     cmd.Parameters.AddWithValue("@CiudadId", ciudad.CiudadId);
-                    
-                    cantidad=(int)cmd.ExecuteScalar();
+
+                    cantidad = (int)cmd.ExecuteScalar();
                 }
             }
             return cantidad > 0;
@@ -213,17 +226,17 @@ namespace NeptunoNet2023.DatosSql
         public int Borrar(Ciudad ciudad)
         {
             int registrosAfectados = 0;
-            using (var conn=new SqlConnection(_connectionString))
+            using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 string deleteQuery = @"DELETE FROM Ciudades WHERE CiudadId=@CiudadId 
                         AND RowVersion=@RowVersion";
-                using (var cmd=new SqlCommand(deleteQuery,conn))
+                using (var cmd = new SqlCommand(deleteQuery, conn))
                 {
                     cmd.Parameters.AddWithValue("@CiudadId", ciudad.CiudadId);
                     cmd.Parameters.AddWithValue("@RowVersion", ciudad.RowVersion);
 
-                    registrosAfectados=cmd.ExecuteNonQuery();
+                    registrosAfectados = cmd.ExecuteNonQuery();
                 }
             }
             return registrosAfectados;
@@ -252,7 +265,7 @@ namespace NeptunoNet2023.DatosSql
 							WHERE CiudadId=@CiudadId";
                         using (var comando = new SqlCommand(selectQuery, conn))
                         {
-                            comando.Parameters.AddWithValue("@CiudadId",ciudad.CiudadId);
+                            comando.Parameters.AddWithValue("@CiudadId", ciudad.CiudadId);
 
                             var row = (byte[])comando.ExecuteScalar();
                             ciudad.RowVersion = row;
@@ -264,5 +277,6 @@ namespace NeptunoNet2023.DatosSql
             }
             return registrosAfectados;
         }
+
     }
 }

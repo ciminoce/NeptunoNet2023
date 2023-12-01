@@ -10,6 +10,7 @@ namespace NeptunoNet2023.Windows
     {
         private readonly IServiciosCiudades _serviciosCiudades;
         private List<CiudadListDto>? listaCiudades;
+        private bool filterOn = false;
         public frmCiudades()
         {
             InitializeComponent();
@@ -18,13 +19,15 @@ namespace NeptunoNet2023.Windows
 
         private void frmCiudades_Load(object sender, EventArgs e)
         {
+            txtCiudadBuscar.Enabled = false;
+
             RecargarGrilla();
         }
 
-        private void MostrarDatosEnGrilla()
+        private void MostrarDatosEnGrilla(List<CiudadListDto> lista)
         {
             GridHelper.LimpiarGrilla(dgvDatos);
-            foreach (var item in listaCiudades)
+            foreach (var item in lista)
             {
                 DataGridViewRow r = GridHelper.ConstruirFila(dgvDatos);
                 GridHelper.SetearFila(r, item);
@@ -149,8 +152,8 @@ namespace NeptunoNet2023.Windows
         {
             try
             {
-                listaCiudades = _serviciosCiudades.GetAll();
-                MostrarDatosEnGrilla();
+                listaCiudades = _serviciosCiudades.GetAll(null);
+                MostrarDatosEnGrilla(listaCiudades);
             }
             catch (Exception)
             {
@@ -161,7 +164,7 @@ namespace NeptunoNet2023.Windows
 
         private void tsbEditar_Click(object sender, EventArgs e)
         {
-            if (dgvDatos.SelectedRows.Count==0)
+            if (dgvDatos.SelectedRows.Count == 0)
             {
                 return;
             }
@@ -176,10 +179,10 @@ namespace NeptunoNet2023.Windows
             try
             {
                 ciudad = frm.GetCiudad();
-                if(!_serviciosCiudades.Existe(ciudad))
+                if (!_serviciosCiudades.Existe(ciudad))
                 {
                     int registrosAfectados = _serviciosCiudades.Guardar(ciudad);
-                    if (registrosAfectados>0)
+                    if (registrosAfectados > 0)
                     {
                         ciudadDto = _serviciosCiudades.GetCiudadDtoPorId(ciudad.CiudadId);
                         GridHelper.SetearFila(r, ciudadDto);
@@ -198,7 +201,7 @@ namespace NeptunoNet2023.Windows
                 }
                 else
                 {
-                    MessageBox.Show("Registro Duplicado!!!","Error",
+                    MessageBox.Show("Registro Duplicado!!!", "Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     GridHelper.SetearFila(r, ciudadCopia);
 
@@ -212,6 +215,67 @@ namespace NeptunoNet2023.Windows
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 GridHelper.SetearFila(r, ciudadCopia);
             }
+        }
+
+        private void tsbFiltrar_Click(object sender, EventArgs e)
+        {
+            if (filterOn)
+            {
+                MessageBox.Show("Filtro aplicado...\nActualizar antes",
+                    "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            frmSeleccionarPais frm = new frmSeleccionarPais() { Text = "País para Filtrar" };
+            DialogResult dr = frm.ShowDialog(this);
+            if (dr == DialogResult.Cancel) return;
+            Pais paisFiltro = frm.GetPais();
+            try
+            {
+                listaCiudades = _serviciosCiudades.GetAll(paisFiltro);
+                MostrarDatosEnGrilla(listaCiudades);
+                tsbFiltrar.BackColor = Color.Orange;
+                filterOn = true;
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void tsbActualizar_Click(object sender, EventArgs e)
+        {
+            filterOn = false;
+            tsbFiltrar.BackColor = SystemColors.Control;
+            RecargarGrilla();
+        }
+
+
+
+        private void txtCiudadBuscar_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCiudadBuscar.Text != string.Empty)
+            {
+                var lista = listaCiudades
+            .Where(c => c.NombreCiudad.StartsWith(txtCiudadBuscar.Text, StringComparison.CurrentCultureIgnoreCase))
+            .ToList();
+                MostrarDatosEnGrilla(lista);
+
+            }
+            else
+            {
+                txtCiudadBuscar.PlaceholderText = "Ingrese ciudad a buscar";
+                txtCiudadBuscar.Enabled = false;
+                RecargarGrilla();
+            }
+        }
+
+        private void tsbBuscar_Click(object sender, EventArgs e)
+        {
+            txtCiudadBuscar.Enabled = true;
+            txtCiudadBuscar.Focus();
         }
     }
 }

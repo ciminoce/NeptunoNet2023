@@ -13,7 +13,32 @@ namespace NeptunoNet2023.DatosSql
 			_connectionString = ConfigurationManager.ConnectionStrings["MiConexion"].ToString();
 		}
 
-		public List<Categoria> GetAll()
+        public int Agregar(Categoria categoria)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Borrar(Categoria categoria)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Editar(Categoria categoria)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool EstaRelacionado(Categoria categoria)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Existe(Categoria categoria)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Categoria> GetAll()
 		{
 			List<Categoria> categorias = new List<Categoria>();
 			using (var conn = new SqlConnection(_connectionString))
@@ -37,7 +62,12 @@ namespace NeptunoNet2023.DatosSql
 
 		}
 
-		private Categoria ConstruirCategoria(SqlDataReader reader)
+        public Categoria GetCategoria(int categoriaId)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Categoria ConstruirCategoria(SqlDataReader reader)
 		{
 			return new Categoria
 			{
