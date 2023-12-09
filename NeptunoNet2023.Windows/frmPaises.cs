@@ -115,7 +115,7 @@ namespace NeptunoNet2023.Windows
                     int registrosAfectados = _serviciosPaises.Borrar(pais);
                     if (registrosAfectados > 0)
                     {
-                        GridHelper.AgregarFila(r, dgvDatos);
+                        GridHelper.QuitarFila(r, dgvDatos);
                         MessageBox.Show("Registro Borrado Satisfactoriamente!!!",
                             "Mensaje",
                             MessageBoxButtons.OK,
