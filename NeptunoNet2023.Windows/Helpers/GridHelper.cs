@@ -42,7 +42,10 @@ namespace NeptunoNet2023.Windows.Helpers
 					r.Cells[0].Value= cliente.NombreCliente;
 					r.Cells[1].Value = cliente.NombrePais;
 					r.Cells[2].Value = cliente.NombreCiudad;
+					r.Cells[3].Value = cliente.TelFijo;
+					r.Cells[4].Value = cliente.TelMovil;
 					break;
+
 				default:
 					break;
 

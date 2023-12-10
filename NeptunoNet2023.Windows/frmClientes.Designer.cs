@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             toolStrip1 = new ToolStrip();
             tsbNuevo = new ToolStripButton();
             tsbBorrar = new ToolStripButton();
@@ -40,12 +40,12 @@
             toolStripSeparator2 = new ToolStripSeparator();
             tsbCerrar = new ToolStripButton();
             dgvDatos = new DataGridView();
-            panel1 = new Panel();
             colCliente = new DataGridViewTextBoxColumn();
             colCiudad = new DataGridViewTextBoxColumn();
             colPais = new DataGridViewTextBoxColumn();
             colFijo = new DataGridViewTextBoxColumn();
             colMovil = new DataGridViewTextBoxColumn();
+            panel1 = new Panel();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvDatos).BeginInit();
             SuspendLayout();
@@ -68,6 +68,7 @@
             tsbNuevo.Size = new Size(46, 59);
             tsbNuevo.Text = "Nuevo";
             tsbNuevo.TextImageRelation = TextImageRelation.ImageAboveText;
+            tsbNuevo.Click += tsbNuevo_Click;
             // 
             // tsbBorrar
             // 
@@ -78,6 +79,7 @@
             tsbBorrar.Size = new Size(44, 59);
             tsbBorrar.Text = "Borrar";
             tsbBorrar.TextImageRelation = TextImageRelation.ImageAboveText;
+            tsbBorrar.Click += tsbBorrar_Click;
             // 
             // tsbEditar
             // 
@@ -138,6 +140,7 @@
             tsbCerrar.Size = new Size(44, 59);
             tsbCerrar.Text = "Cerrar";
             tsbCerrar.TextImageRelation = TextImageRelation.ImageAboveText;
+            tsbCerrar.Click += tsbCerrar_Click;
             // 
             // dgvDatos
             // 
@@ -145,8 +148,8 @@
             dgvDatos.AllowUserToDeleteRows = false;
             dgvDatos.AllowUserToResizeColumns = false;
             dgvDatos.AllowUserToResizeRows = false;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(224, 224, 224);
-            dgvDatos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
+            dgvDatos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvDatos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDatos.Columns.AddRange(new DataGridViewColumn[] { colCliente, colCiudad, colPais, colFijo, colMovil });
             dgvDatos.Dock = DockStyle.Fill;
@@ -158,14 +161,6 @@
             dgvDatos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvDatos.Size = new Size(988, 488);
             dgvDatos.TabIndex = 8;
-            // 
-            // panel1
-            // 
-            panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 550);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(988, 82);
-            panel1.TabIndex = 9;
             // 
             // colCliente
             // 
@@ -199,6 +194,14 @@
             colMovil.HeaderText = "Móvil";
             colMovil.Name = "colMovil";
             colMovil.ReadOnly = true;
+            // 
+            // panel1
+            // 
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 550);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(988, 82);
+            panel1.TabIndex = 9;
             // 
             // frmClientes
             // 

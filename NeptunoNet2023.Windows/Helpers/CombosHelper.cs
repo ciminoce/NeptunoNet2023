@@ -1,4 +1,5 @@
-﻿using NeptunoNet2023.Entidades.Entidades;
+﻿using NeptunoNet2023.Entidades.Dtos.Ciudad;
+using NeptunoNet2023.Entidades.Entidades;
 using NeptunoNet2023.Servicios.Servicios;
 
 namespace NeptunoNet2023.Windows.Helpers
@@ -22,6 +23,21 @@ namespace NeptunoNet2023.Windows.Helpers
 
             cbo.SelectedIndex = 0;
         }
+        public static void CargarDatosComboCiudades(ref ComboBox cbo, Pais pais)
+        {
+            var _serviciosCiudades=new ServiciosCiudades();
+            var listaCiudades = _serviciosCiudades.GetAll(pais);
+            CiudadListDto defaultCiudad = new CiudadListDto()
+            {
+                CiudadId = 0,
+                NombreCiudad = "Seleccione Ciudad"
+            };
+            listaCiudades.Insert(0, defaultCiudad);
 
+            cbo.DataSource= listaCiudades;//establezco la fuente de datos del cbo
+            cbo.DisplayMember = "NombreCiudad";//establezco que muestre el nombre de la ciudad
+            cbo.ValueMember = "CiudadId";//establezco el valor que se guardará
+            cbo.SelectedIndex = 0;
+        }
     }
 }
