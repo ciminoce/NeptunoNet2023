@@ -80,6 +80,19 @@ namespace NeptunoNet2023.Servicios.Servicios
 			}
         }
 
+        public List<CiudadComboDto> GetCiudadesComboDto(Pais paisFiltro)
+        {
+			try
+			{
+				return _repositorioCiudades.GetCiudadesComboDto(paisFiltro);
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+        }
+
         public Ciudad GetCiudadPorId(int ciudadId)
         {
 			try

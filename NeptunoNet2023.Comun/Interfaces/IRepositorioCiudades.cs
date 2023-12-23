@@ -13,5 +13,6 @@ namespace NeptunoNet2023.Comun.Interfaces
         int Borrar(Ciudad ciudad);
         int Editar(Ciudad ciudad);
         List<CiudadListDto>? GetAll(Pais paisFiltro=null);
+        List<CiudadComboDto> GetCiudadesComboDto(Pais paisFiltro);
     }
 }

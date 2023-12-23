@@ -1,5 +1,6 @@
 ﻿using NeptunoNet2023.Comun.Interfaces;
 using NeptunoNet2023.DatosSql;
+using NeptunoNet2023.Entidades.Dtos.Ciudad;
 using NeptunoNet2023.Entidades.Dtos.Cliente;
 using NeptunoNet2023.Entidades.Entidades;
 using NeptunoNet2023.Servicios.Interfaces;
@@ -78,11 +79,11 @@ namespace NeptunoNet2023.Servicios.Servicios
             }
         }
 
-        public List<ClienteListDto> GetClientes()
+        public List<ClienteListDto> GetClientes(Pais paisFiltro=null, CiudadComboDto ciudadFiltro=null)
         {
             try
             {
-                return _repositorioClientes.GetClientes();
+                return _repositorioClientes.GetClientes(paisFiltro,ciudadFiltro);
             }
             catch (Exception)
             {
@@ -95,8 +96,15 @@ namespace NeptunoNet2023.Servicios.Servicios
         {
             try
             {
-                //TODO:Modificar cuando se haga la edición
-                return _repositorioClientes.Agregar(cliente);
+                if (cliente.ClienteId == 0)
+                {
+                    return _repositorioClientes.Agregar(cliente);
+
+                }
+                else
+                {
+                    return _repositorioClientes.Editar(cliente);
+                }
             }
             catch (Exception)
             {

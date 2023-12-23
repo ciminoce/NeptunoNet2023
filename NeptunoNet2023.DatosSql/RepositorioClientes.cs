@@ -1,4 +1,5 @@
 ﻿using NeptunoNet2023.Comun.Interfaces;
+using NeptunoNet2023.Entidades.Dtos.Ciudad;
 using NeptunoNet2023.Entidades.Dtos.Cliente;
 using NeptunoNet2023.Entidades.Entidades;
 using System.Configuration;
@@ -165,19 +166,34 @@ namespace NeptunoNet2023.DatosSql
             };
         }
 
-        public List<ClienteListDto> GetClientes()
+        public List<ClienteListDto> GetClientes(Pais paisFiltro=null, CiudadComboDto ciudadFiltro=null)
         {
             List<ClienteListDto> clientes=new List<ClienteListDto>();
             using (var conn=new SqlConnection(_connectionString))
             {
                 conn.Open();
                 string selectQuery = @"SELECT cli.ClienteId, cli.NombreCliente, p.NombrePais, 
-                    c.NombreCiudad, cli.TelFijo, cli.TelMovil FROM Clientes cli
-	                INNER JOIN Paises p ON cli.PaisId=p.PaisId 
-                    INNER JOIN Ciudades c ON cli.CiudadId=c.CiudadId 
-                    ORDER BY cli.NombreCliente";
+                        c.NombreCiudad, cli.TelFijo, cli.TelMovil FROM Clientes cli
+	                    INNER JOIN Paises p ON cli.PaisId=p.PaisId 
+                        INNER JOIN Ciudades c ON cli.CiudadId=c.CiudadId ";
+                string orderBy="ORDER BY cli.NombreCliente ";
+                string filter = "WHERE cli.PaisId=@PaisId AND cli.CiudadId=@CiudadId ";
+
+                if (paisFiltro == null)
+                {
+                    selectQuery += orderBy;
+
+                }
+                else
+                {
+                    selectQuery += filter + orderBy;
+                }
                 using (var cmd=new SqlCommand(selectQuery,conn))
                 {
+                    if (paisFiltro != null) {
+                        cmd.Parameters.AddWithValue("@PaisId", paisFiltro.PaisId);
+                        cmd.Parameters.AddWithValue("@CiudadId", ciudadFiltro.CiudadId);
+                    }
                     using (var reader=cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -273,6 +289,60 @@ namespace NeptunoNet2023.DatosSql
             }
             return registrosAfectados;
 
+        }
+
+        public int Editar(Cliente cliente)
+        {
+            int registrosAfectados = 0;
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string updateQuery = @"UPDATE Clientes SET NombreCliente=@Nombre, Direccion=@Direccion,
+                    CodPostal=@CodPostal, PaisId=@PaisId, CiudadId=@CiudadId, TelFijo=@TelFijo,
+                    TelMovil=@TelMovil WHERE ClienteId=@ClienteId"; 
+                using (var cmd = new SqlCommand(updateQuery, conn)) { 
+                    cmd.Parameters.AddWithValue("@Nombre", cliente.NombreCliente);
+                    cmd.Parameters.AddWithValue("@Direccion", cliente.Direccion);
+                    cmd.Parameters.AddWithValue("@CodPostal", cliente.CodPostal);
+                    cmd.Parameters.AddWithValue("@PaisId", cliente.PaisId);
+                    cmd.Parameters.AddWithValue("@CiudadId", cliente.CiudadId);
+
+                    if (cliente.TelFijo != null)
+                    {
+                        cmd.Parameters.AddWithValue("@TelFijo", cliente.TelFijo);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@TelFijo", DBNull.Value);
+                    }
+
+                    if (cliente.TelMovil != null)
+                    {
+                        cmd.Parameters.AddWithValue("@TelMovil", cliente.TelMovil);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@TelMovil", DBNull.Value);
+                    }
+                    cmd.Parameters.AddWithValue("@ClienteId", cliente.ClienteId);
+
+                    registrosAfectados = cmd.ExecuteNonQuery();
+                }
+                if (registrosAfectados > 0)
+                {
+                    var selectQuery = @"SELECT RowVersion FROM Clientes 
+						WHERE ClienteId=@ClienteId";
+                    using (var cmd = new SqlCommand(selectQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ClienteId", cliente.ClienteId);
+                        byte[] rowVersion = (byte[])cmd.ExecuteScalar();
+                        cliente.RowVersion = rowVersion;
+                    }
+
+                }
+
+            }
+            return registrosAfectados;
         }
     }
 }

@@ -278,5 +278,41 @@ namespace NeptunoNet2023.DatosSql
             return registrosAfectados;
         }
 
+        public List<CiudadComboDto> GetCiudadesComboDto(Pais paisFiltro)
+        {
+            List<CiudadComboDto> lista = new List<CiudadComboDto>();
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string selectQuery = @"SELECT CiudadId, NombreCiudad
+						FROM Ciudades ";
+                string conditional = " WHERE PaisId=@PaisId ";
+                string order = " ORDER BY NombreCiudad";
+
+                selectQuery = string.Concat(selectQuery, conditional, order);
+                using (var cmd = new SqlCommand(selectQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@PaisId", paisFiltro.PaisId);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            CiudadComboDto ciudad = ConstruirCiudadComboDto(reader);
+                            lista.Add(ciudad);
+                        }
+                    }
+                }
+            }
+            return lista;
+        }
+
+        private CiudadComboDto ConstruirCiudadComboDto(SqlDataReader reader)
+        {
+            return new CiudadComboDto
+            {
+                CiudadId = reader.GetInt32(0),
+                NombreCiudad = reader.GetString(1)
+            };
+        }
     }
 }

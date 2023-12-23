@@ -41,8 +41,8 @@
             tsbCerrar = new ToolStripButton();
             dgvDatos = new DataGridView();
             colCliente = new DataGridViewTextBoxColumn();
-            colCiudad = new DataGridViewTextBoxColumn();
             colPais = new DataGridViewTextBoxColumn();
+            colCiudad = new DataGridViewTextBoxColumn();
             colFijo = new DataGridViewTextBoxColumn();
             colMovil = new DataGridViewTextBoxColumn();
             panel1 = new Panel();
@@ -90,6 +90,7 @@
             tsbEditar.Size = new Size(44, 59);
             tsbEditar.Text = "Editar";
             tsbEditar.TextImageRelation = TextImageRelation.ImageAboveText;
+            tsbEditar.Click += tsbEditar_Click;
             // 
             // toolStripSeparator1
             // 
@@ -105,6 +106,7 @@
             tsbFiltrar.Size = new Size(41, 59);
             tsbFiltrar.Text = "Filtrar";
             tsbFiltrar.TextImageRelation = TextImageRelation.ImageAboveText;
+            tsbFiltrar.Click += tsbFiltrar_Click;
             // 
             // tsbBuscar
             // 
@@ -125,6 +127,7 @@
             tsbActualizar.Size = new Size(63, 59);
             tsbActualizar.Text = "Actualizar";
             tsbActualizar.TextImageRelation = TextImageRelation.ImageAboveText;
+            tsbActualizar.Click += tsbActualizar_Click;
             // 
             // toolStripSeparator2
             // 
@@ -151,7 +154,7 @@
             dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
             dgvDatos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvDatos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvDatos.Columns.AddRange(new DataGridViewColumn[] { colCliente, colCiudad, colPais, colFijo, colMovil });
+            dgvDatos.Columns.AddRange(new DataGridViewColumn[] { colCliente, colPais, colCiudad, colFijo, colMovil });
             dgvDatos.Dock = DockStyle.Fill;
             dgvDatos.Location = new Point(0, 62);
             dgvDatos.MultiSelect = false;
@@ -169,19 +172,19 @@
             colCliente.Name = "colCliente";
             colCliente.ReadOnly = true;
             // 
-            // colCiudad
-            // 
-            colCiudad.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colCiudad.HeaderText = "Ciudad";
-            colCiudad.Name = "colCiudad";
-            colCiudad.ReadOnly = true;
-            // 
             // colPais
             // 
             colPais.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colPais.HeaderText = "País";
             colPais.Name = "colPais";
             colPais.ReadOnly = true;
+            // 
+            // colCiudad
+            // 
+            colCiudad.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colCiudad.HeaderText = "Ciudad";
+            colCiudad.Name = "colCiudad";
+            colCiudad.ReadOnly = true;
             // 
             // colFijo
             // 
@@ -236,8 +239,8 @@
         private DataGridView dgvDatos;
         private Panel panel1;
         private DataGridViewTextBoxColumn colCliente;
-        private DataGridViewTextBoxColumn colCiudad;
         private DataGridViewTextBoxColumn colPais;
+        private DataGridViewTextBoxColumn colCiudad;
         private DataGridViewTextBoxColumn colFijo;
         private DataGridViewTextBoxColumn colMovil;
     }

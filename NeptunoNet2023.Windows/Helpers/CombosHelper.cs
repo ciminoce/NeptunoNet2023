@@ -26,8 +26,8 @@ namespace NeptunoNet2023.Windows.Helpers
         public static void CargarDatosComboCiudades(ref ComboBox cbo, Pais pais)
         {
             var _serviciosCiudades=new ServiciosCiudades();
-            var listaCiudades = _serviciosCiudades.GetAll(pais);
-            CiudadListDto defaultCiudad = new CiudadListDto()
+            var listaCiudades = _serviciosCiudades.GetCiudadesComboDto(pais);
+            CiudadComboDto defaultCiudad = new CiudadComboDto()
             {
                 CiudadId = 0,
                 NombreCiudad = "Seleccione Ciudad"

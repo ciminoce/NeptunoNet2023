@@ -15,6 +15,18 @@ namespace NeptunoNet2023.Windows
         {
             base.OnLoad(e);
             CombosHelper.CargarDatosComboPaises(ref cboPaises);
+            if (cliente!=null)
+            {
+                txtCliente.Text = cliente.NombreCliente;
+                txtDireccion.Text=cliente.Direccion;
+                txtCodPostal.Text=cliente.CodPostal;
+                txtTelFijo.Text=cliente.TelFijo;
+                txtTelMovil.Text=cliente.TelMovil;
+                cboPaises.SelectedValue = cliente.PaisId;
+                paisSeleccionado = (Pais)cboPaises.SelectedItem;
+                CombosHelper.CargarDatosComboCiudades(ref cboCiudades, paisSeleccionado);
+                cboCiudades.SelectedValue = cliente.CiudadId;
+            }
         }
         private void btnCancelar_Click(object sender, EventArgs e)
         {
@@ -48,7 +60,8 @@ namespace NeptunoNet2023.Windows
                 cliente.CodPostal = txtCodPostal.Text;
                 cliente.PaisId =(int) cboPaises.SelectedValue;
                 cliente.CiudadId=(int)cboCiudades.SelectedValue;
-
+                cliente.TelFijo= txtTelFijo.Text;
+                cliente.TelMovil=txtTelMovil.Text;
                 DialogResult = DialogResult.OK;
             }
         }
@@ -91,6 +104,11 @@ namespace NeptunoNet2023.Windows
         public Cliente GetCliente()
         {
             return cliente;
+        }
+
+        public void SetCliente(Cliente cliente)
+        {
+            this.cliente = cliente;
         }
     }
 }
