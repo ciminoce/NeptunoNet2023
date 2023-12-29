@@ -117,6 +117,7 @@
             toolStripButton1.Size = new Size(46, 59);
             toolStripButton1.Text = "Nuevo";
             toolStripButton1.TextImageRelation = TextImageRelation.ImageAboveText;
+            toolStripButton1.Click += tsbNuevo_Click;
             // 
             // toolStripButton2
             // 
@@ -127,6 +128,7 @@
             toolStripButton2.Size = new Size(44, 59);
             toolStripButton2.Text = "Borrar";
             toolStripButton2.TextImageRelation = TextImageRelation.ImageAboveText;
+            toolStripButton2.Click += tsbBorrar_Click;
             // 
             // toolStripButton3
             // 
@@ -137,6 +139,7 @@
             toolStripButton3.Size = new Size(44, 59);
             toolStripButton3.Text = "Editar";
             toolStripButton3.TextImageRelation = TextImageRelation.ImageAboveText;
+            toolStripButton3.Click += tsbEditar_Click;
             // 
             // toolStripSeparator1
             // 

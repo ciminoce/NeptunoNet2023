@@ -1,4 +1,4 @@
-﻿using NeptunoNet2023.Entidades.Dtos.Cliente;
+﻿using NeptunoNet2023.Entidades.Dtos.Proveedor;
 using NeptunoNet2023.Entidades.Entidades;
 using NeptunoNet2023.Servicios.Interfaces;
 using NeptunoNet2023.Servicios.Servicios;
@@ -6,17 +6,17 @@ using NeptunoNet2023.Windows.Helpers;
 
 namespace NeptunoNet2023.Windows
 {
-    public partial class frmClientes : Form
+    public partial class frmProveedores : Form
     {
-        private readonly IServiciosClientes _serviciosClientes;
-        private List<ClienteListDto> clientes;
-        public frmClientes()
+        public frmProveedores()
         {
             InitializeComponent();
-            _serviciosClientes = new ServiciosClientes();
+            _serviciosProveedores = new ServiciosProveedores();
         }
+        private readonly IServiciosProveedores _serviciosProveedores;
+        private List<ProveedorListDto> proveedores;
 
-        private void frmClientes_Load(object sender, EventArgs e)
+        private void frmProveedores_Load(object sender, EventArgs e)
         {
             RecargarGrilla();
         }
@@ -25,7 +25,7 @@ namespace NeptunoNet2023.Windows
         {
             try
             {
-                clientes = _serviciosClientes.GetClientes();
+                proveedores = _serviciosProveedores.GetProveedores();
                 MostrarDatosEnGrilla();
             }
             catch (Exception)
@@ -37,7 +37,7 @@ namespace NeptunoNet2023.Windows
         private void MostrarDatosEnGrilla()
         {
             GridHelper.LimpiarGrilla(dgvDatos);
-            foreach (var item in clientes)
+            foreach (var item in proveedores)
             {
                 DataGridViewRow r = GridHelper.ConstruirFila(dgvDatos);
                 GridHelper.SetearFila(r, item);
@@ -47,23 +47,23 @@ namespace NeptunoNet2023.Windows
 
         private void tsbNuevo_Click(object sender, EventArgs e)
         {
-            frmClienteAE frm = new frmClienteAE() { Text = "Nuevo Cliente" };
+            frmProveedorAE frm = new frmProveedorAE() { Text = "Nuevo Proveedor" };
             DialogResult dr = frm.ShowDialog(this);
             if (dr == DialogResult.Cancel) { return; }
             try
             {
-                Cliente cliente = frm.GetCliente();
+                Proveedor proveedor = frm.GetProveedor();
                 //TODO: Controlar que no estea repetido
-                if (!_serviciosClientes.Existe(cliente))
+                if (!_serviciosProveedores.Existe(proveedor))
                 {
-                    int registrosAfectados = _serviciosClientes.Guardar(cliente);
+                    int registrosAfectados = _serviciosProveedores.Guardar(proveedor);
                     if (registrosAfectados > 0)
                     {
-                        ClienteListDto clienteDto = _serviciosClientes
-                            .GetClienteDtoPorId(cliente.ClienteId);
+                        ProveedorListDto proveedorDto = _serviciosProveedores
+                            .GetProveedorDtoPorId(proveedor.ProveedorId);
 
                         var r = GridHelper.ConstruirFila(dgvDatos);
-                        GridHelper.SetearFila(r, clienteDto);
+                        GridHelper.SetearFila(r, proveedorDto);
                         GridHelper.AgregarFila(r, dgvDatos);
                         MessageBox.Show("Registro agregado!!!",
                             "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -78,7 +78,7 @@ namespace NeptunoNet2023.Windows
                 }
                 else
                 {
-                    MessageBox.Show("Cliente Duplicado!!!",
+                    MessageBox.Show("Proveedor Duplicado!!!",
                             "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 
@@ -103,18 +103,18 @@ namespace NeptunoNet2023.Windows
                 return;
             }
             var r = dgvDatos.SelectedRows[0];
-            var clienteDto = (ClienteListDto)r.Tag;
-            DialogResult dr = MessageBox.Show($"¿Desea dar de baja al cliente {clienteDto.ToString()}?",
+            var proveedorDto = (ProveedorListDto)r.Tag;
+            DialogResult dr = MessageBox.Show($"¿Desea dar de baja al proveedor {proveedorDto.ToString()}?",
                 "Confirmar Borrado",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2);
             if (dr == DialogResult.No) { return; }
-            Cliente cliente = _serviciosClientes.GetClientePorId(clienteDto.ClienteId);
-            if (cliente != null)
+            Proveedor proveedor = _serviciosProveedores.GetProveedorPorId(proveedorDto.ProveedorId);
+            if (proveedor != null)
             {
-                if (!_serviciosClientes.EstaRelacionado(cliente))
+                if (!_serviciosProveedores.EstaRelacionado(proveedor))
                 {
-                    int registrosAfectados = _serviciosClientes.Borrar(cliente);
+                    int registrosAfectados = _serviciosProveedores.Borrar(proveedor);
                     if (registrosAfectados > 0)
                     {
                         GridHelper.QuitarFila(r, dgvDatos);
@@ -155,23 +155,23 @@ namespace NeptunoNet2023.Windows
             if (dgvDatos.SelectedRows.Count == 0) { return; }
 
             var r = dgvDatos.SelectedRows[0];
-            var clienteDto = (ClienteListDto)r.Tag;
-            var clienteDtoAux = (ClienteListDto)clienteDto.Clone();
-            var cliente = _serviciosClientes.GetClientePorId(clienteDto.ClienteId);
-            frmClienteAE frm = new frmClienteAE() { Text = "Edición de Cliente" };
-            frm.SetCliente(cliente);
+            var proveedorDto = (ProveedorListDto)r.Tag;
+            var proveedorDtoAux = (ProveedorListDto)proveedorDto.Clone();
+            var proveedor = _serviciosProveedores.GetProveedorPorId(proveedorDto.ProveedorId);
+            frmProveedorAE frm = new frmProveedorAE() { Text = "Edición de Proveedor" };
+            frm.SetProveedor(proveedor);
             DialogResult dr = frm.ShowDialog(this);
             if (dr == DialogResult.Cancel) { return; }
             try
             {
-                cliente = frm.GetCliente();
-                if (!_serviciosClientes.Existe(cliente))
+                proveedor = frm.GetProveedor();
+                if (!_serviciosProveedores.Existe(proveedor))
                 {
-                    int registrosAfectados = _serviciosClientes.Guardar(cliente);
+                    int registrosAfectados = _serviciosProveedores.Guardar(proveedor);
                     if (registrosAfectados > 0)
                     {
-                        clienteDto = _serviciosClientes.GetClienteDtoPorId(clienteDto.ClienteId);
-                        GridHelper.SetearFila(r, clienteDto);
+                        proveedorDto = _serviciosProveedores.GetProveedorDtoPorId(proveedorDto.ProveedorId);
+                        GridHelper.SetearFila(r, proveedorDto);
                         MessageBox.Show("Registro Modificado!!", "Mensaje", MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
                     }
@@ -190,12 +190,12 @@ namespace NeptunoNet2023.Windows
                 {
                     MessageBox.Show("Registro Duplicado!!!", "Error", MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
-                    GridHelper.SetearFila(r, clienteDtoAux);
+                    GridHelper.SetearFila(r, proveedorDtoAux);
                 }
             }
             catch (Exception ex)
             {
-                GridHelper.SetearFila(r, clienteDtoAux);
+                GridHelper.SetearFila(r, proveedorDtoAux);
 
                 MessageBox.Show(ex.Message,
                     "Error",
@@ -217,7 +217,7 @@ namespace NeptunoNet2023.Windows
                 var paisSeleccionado = datosSeleccionados.Item1;
                 var ciudadSeleccionada = datosSeleccionados.Item2;
 
-                clientes = _serviciosClientes.GetClientes(paisSeleccionado, ciudadSeleccionada);
+                proveedores = _serviciosProveedores.GetProveedores(paisSeleccionado, ciudadSeleccionada);
                 MostrarDatosEnGrilla();
             }
             catch (Exception)
@@ -231,5 +231,6 @@ namespace NeptunoNet2023.Windows
         {
             RecargarGrilla();
         }
+
     }
 }

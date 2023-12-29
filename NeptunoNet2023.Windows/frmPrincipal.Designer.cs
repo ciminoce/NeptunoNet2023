@@ -33,6 +33,7 @@
             btnCategorias = new Button();
             btnCiudades = new Button();
             btnClientes = new Button();
+            btnProveedores = new Button();
             SuspendLayout();
             // 
             // btnPaises
@@ -94,6 +95,18 @@
             btnClientes.UseVisualStyleBackColor = true;
             btnClientes.Click += btnClientes_Click;
             // 
+            // btnProveedores
+            // 
+            btnProveedores.Image = Properties.Resources.customer_50px;
+            btnProveedores.Location = new Point(199, 169);
+            btnProveedores.Name = "btnProveedores";
+            btnProveedores.Size = new Size(134, 70);
+            btnProveedores.TabIndex = 0;
+            btnProveedores.Text = "Proveedores";
+            btnProveedores.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnProveedores.UseVisualStyleBackColor = true;
+            btnProveedores.Click += btnProveedores_Click;
+            // 
             // frmPrincipal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -101,6 +114,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(btnSalir);
             Controls.Add(btnCategorias);
+            Controls.Add(btnProveedores);
             Controls.Add(btnClientes);
             Controls.Add(btnCiudades);
             Controls.Add(btnPaises);
@@ -116,5 +130,6 @@
 		private Button btnCategorias;
 		private Button btnCiudades;
         private Button btnClientes;
+        private Button btnProveedores;
     }
 }

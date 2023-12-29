@@ -27,7 +27,13 @@
 
         private void btnClientes_Click(object sender, EventArgs e)
         {
-            frmClientes frm=new frmClientes();
+            frmClientes frm = new frmClientes();
+            frm.ShowDialog(this);
+        }
+
+        private void btnProveedores_Click(object sender, EventArgs e)
+        {
+            frmProveedores frm = new frmProveedores();
             frm.ShowDialog(this);
         }
     }

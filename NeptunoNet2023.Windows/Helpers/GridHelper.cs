@@ -1,5 +1,6 @@
 ﻿using NeptunoNet2023.Entidades.Dtos.Ciudad;
 using NeptunoNet2023.Entidades.Dtos.Cliente;
+using NeptunoNet2023.Entidades.Dtos.Proveedor;
 using NeptunoNet2023.Entidades.Entidades;
 
 namespace NeptunoNet2023.Windows.Helpers
@@ -45,8 +46,15 @@ namespace NeptunoNet2023.Windows.Helpers
 					r.Cells[3].Value = cliente.TelFijo;
 					r.Cells[4].Value = cliente.TelMovil;
 					break;
+                case ProveedorListDto proveedor:
+                    r.Cells[0].Value = proveedor.NombreProveedor;
+                    r.Cells[1].Value = proveedor.NombrePais;
+                    r.Cells[2].Value = proveedor.NombreCiudad;
+                    r.Cells[3].Value = proveedor.Telefono;
+                    break;
 
-				default:
+
+                default:
 					break;
 
 			}
