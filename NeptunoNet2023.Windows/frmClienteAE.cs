@@ -15,13 +15,13 @@ namespace NeptunoNet2023.Windows
         {
             base.OnLoad(e);
             CombosHelper.CargarDatosComboPaises(ref cboPaises);
-            if (cliente!=null)
+            if (cliente != null)
             {
                 txtCliente.Text = cliente.NombreCliente;
-                txtDireccion.Text=cliente.Direccion;
-                txtCodPostal.Text=cliente.CodPostal;
-                txtTelFijo.Text=cliente.TelFijo;
-                txtTelMovil.Text=cliente.TelMovil;
+                txtDireccion.Text = cliente.Direccion;
+                txtCodPostal.Text = cliente.CodPostal;
+                txtTelFijo.Text = cliente.TelFijo;
+                txtTelMovil.Text = cliente.TelMovil;
                 cboPaises.SelectedValue = cliente.PaisId;
                 paisSeleccionado = (Pais)cboPaises.SelectedItem;
                 CombosHelper.CargarDatosComboCiudades(ref cboCiudades, paisSeleccionado);
@@ -35,33 +35,23 @@ namespace NeptunoNet2023.Windows
 
         private void cboPaises_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cboPaises.SelectedIndex > 0)
-            {
-                paisSeleccionado = (Pais)cboPaises.SelectedItem;
-                CombosHelper.CargarDatosComboCiudades(ref cboCiudades, paisSeleccionado);
-            }
-            else
-            {
-                paisSeleccionado = null;
-                cboCiudades.DataSource = null;
-            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (ValidarDatos())
             {
-                if (cliente==null)
+                if (cliente == null)
                 {
                     cliente = new Cliente();
                 }
                 cliente.NombreCliente = txtCliente.Text;
                 cliente.Direccion = txtDireccion.Text;
                 cliente.CodPostal = txtCodPostal.Text;
-                cliente.PaisId =(int) cboPaises.SelectedValue;
-                cliente.CiudadId=(int)cboCiudades.SelectedValue;
-                cliente.TelFijo= txtTelFijo.Text;
-                cliente.TelMovil=txtTelMovil.Text;
+                cliente.PaisId = (int)cboPaises.SelectedValue;
+                cliente.CiudadId = (int)cboCiudades.SelectedValue;
+                cliente.TelFijo = txtTelFijo.Text;
+                cliente.TelMovil = txtTelMovil.Text;
                 DialogResult = DialogResult.OK;
             }
         }
@@ -93,7 +83,7 @@ namespace NeptunoNet2023.Windows
                 valido = false;
                 errorProvider1.SetError(cboPaises, "Debe seleccionar un país");
             }
-            else if (cboCiudades.SelectedIndex==0)
+            else if (cboCiudades.SelectedIndex == 0)
             {
                 valido = false;
                 errorProvider1.SetError(cboCiudades, "Debe seleccionar una ciudad");
@@ -109,6 +99,21 @@ namespace NeptunoNet2023.Windows
         public void SetCliente(Cliente cliente)
         {
             this.cliente = cliente;
+        }
+
+        private void cboPaises_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (cboPaises.SelectedIndex > 0)
+            {
+                paisSeleccionado = (Pais)cboPaises.SelectedItem;
+                CombosHelper.CargarDatosComboCiudades(ref cboCiudades, paisSeleccionado);
+            }
+            else
+            {
+                paisSeleccionado = null;
+                cboCiudades.DataSource = null;
+            }
+
         }
     }
 }

@@ -35,12 +35,12 @@ namespace NeptunoNet2023.Windows
         {
             if (ValidarDatos())
             {
-                if (ciudad==null)
+                if (ciudad == null)
                 {
                     ciudad = new Ciudad();
                 }
-                ciudad.NombreCiudad=txtCiudad.Text;
-                ciudad.PaisId =(int) cboPaises.SelectedValue;
+                ciudad.NombreCiudad = txtCiudad.Text;
+                ciudad.PaisId = (int)cboPaises.SelectedValue;
 
                 DialogResult = DialogResult.OK;
             }
@@ -55,8 +55,8 @@ namespace NeptunoNet2023.Windows
                 validar = false;
                 errorProvider1.SetError(txtCiudad, "La ciudad es requerida!!!");
             }
-            if (cboPaises.SelectedIndex==0) 
-            { 
+            if (cboPaises.SelectedIndex == 0)
+            {
                 validar = false;
                 errorProvider1.SetError(cboPaises, "Debe seleccionar un país!!!");
             }

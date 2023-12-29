@@ -104,7 +104,7 @@
             cboPaises.Name = "cboPaises";
             cboPaises.Size = new Size(320, 23);
             cboPaises.TabIndex = 4;
-            cboPaises.SelectedIndexChanged += cboPaises_SelectedIndexChanged;
+            cboPaises.SelectionChangeCommitted += cboPaises_SelectionChangeCommitted;
             // 
             // txtCodPostal
             // 
